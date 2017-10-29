@@ -1,7 +1,8 @@
 var express = require('express'),
     app = express(),
     bodyParser = require('body-parser');
-    port = process.env.PORT || 8080;
+    config = require('./config'),
+    port = process.env.PORT || config.app.port;
 
 app.use(express.static(__dirname + '/public'));
 
