@@ -1,0 +1,12 @@
+extend layout
+
+block content
+    h1 Login
+    form(action="login", method="post")
+        .form-group
+            label(for="email")
+            input(type="text", name="email").form-control
+        .form-group
+            label(for="password")
+            input(type="password", name="password").form-control            
+        button(type="submit").btn.btn-default Login
