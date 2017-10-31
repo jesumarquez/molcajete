@@ -2,7 +2,7 @@ var passport        = require('passport')
     authController  = {};
 
 authController.login = function (req, res) {
-    res.render('login');
+    res.render('auth/login');
 };
 
 authController.doLogin = function(req, res){
