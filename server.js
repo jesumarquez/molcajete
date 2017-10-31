@@ -4,8 +4,8 @@ var express         = require('express'),
     bodyParser      = require('body-parser'),
     cookieParser    = require('cookie-parser'),
     config          = require('./config'),
-    appRoute        = require('./controllers/app'),
-    loginRoute      = require('./controllers/login'),
+    appRoute        = require('./routes'),
+    loginRoute      = require('./routes/auth'),
     session         = require('express-session'),
     passport        = require('passport'),
     LocalStrategy   = require('passport-local').Strategy,
@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //PASSPORT
 app.use(cookieParser());
 app.use(session({ 
-    secret: 'keyboard cat',
+    secret: 'super secret cat!!!',
     resave: false,
     saveUninitialized: false 
 }));
@@ -44,13 +44,11 @@ passport.use(new LocalStrategy({
     }
 ));
 passport.serializeUser(function (user, done) {
-    console.log(user);
     done(null, user);
-})
+});
 passport.deserializeUser(function (username, done) {
-    console.log(username);
     done(null, username);
-})
+});
 
 //ROUTES
 app.use('/', appRoute);
