@@ -2,14 +2,8 @@ var passport        = require('passport')
     authController  = {};
 
 authController.login = function (req, res) {
-    res.render('auth/login');
+    res.render('auth/login', { message: req.flash('loginMessage') });
 };
-
-authController.doLogin = function(req, res){
-    passport.authenticate('local', { failureRedirect: '/login' })(req, res, function() {
-        res.redirect('/');
-    });
-} 
 
 authController.isAuthenticated = function () {
   return function (req, res, next) {

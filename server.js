@@ -10,6 +10,7 @@ var express         = require('express'),
     passport        = require('passport'),
     LocalStrategy   = require('passport-local').Strategy,
     User            = require('./models/user'),
+    flash           = require('connect-flash'),
     port            = process.env.PORT || config.app.port;
 
 //VIEWS
@@ -34,18 +35,20 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 passport.use(new LocalStrategy({
         usernameField: 'email',
-        passwordField: 'password'
+        passwordField: 'password',
+        passReqToCallback: true
     },
-    function (username, password, done) {
+    function (req, username, password, done) {
         User.findById(username, function(user){
             if(!user) {
-                return done(null, false, { message: 'User not found' });
+                return done(null, false, req.flash('loginMessage', 'User not found'));
             }
 
             if(user.password !== password){
-                return done(null, false, { message: 'Incorrect password.' });                
+                return done(null, false, req.flash('loginMessage','Incorrect password.'));                
             }
 
             return done(null, user);
