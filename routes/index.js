@@ -1,10 +1,10 @@
 var express         = require('express'),
     app             = express.Router(),
-    homeControler   = require('../controllers/homeController');
-    authControler   = require('../controllers/authController');
+    homeController   = require('../controllers/homeController');
+    authController   = require('../controllers/authController');
 
-app.get('', homeControler.home);
+app.get('', homeController.home);
 
-app.get('/about', authControler.isAuthenticated(), homeControler.about);
+app.get('/about', authController.isAuthenticated(), homeController.about);
 
 module.exports = app;
