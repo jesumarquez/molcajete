@@ -9,6 +9,7 @@ var express         = require('express'),
     session         = require('express-session'),
     passport        = require('passport'),
     LocalStrategy   = require('passport-local').Strategy,
+    User            = require('./models/user'),
     port            = process.env.PORT || config.app.port;
 
 //VIEWS
@@ -38,17 +39,26 @@ passport.use(new LocalStrategy({
         passwordField: 'password'
     },
     function (username, password, done) {
-        if(username == 'jesumarquez@gmail.com')
-            return done(null, username);
-        else
-            return done(null, false, {message: 'user not found'});
+        User.findById(username, function(user){
+            if(!user) {
+                return done(null, false, { message: 'User not found' });
+            }
+
+            if(user.password !== password){
+                return done(null, false, { message: 'Incorrect password.' });                
+            }
+
+            return done(null, user);
+        });
     }
 ));
 passport.serializeUser(function (user, done) {
-    done(null, user);
+    done(null, user.username);
 });
 passport.deserializeUser(function (username, done) {
-    done(null, username);
+    User.findById(username, function(user) {
+        done(null, user);
+    });    
 });
 
 //ROUTES

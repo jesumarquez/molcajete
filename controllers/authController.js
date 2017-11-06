@@ -6,7 +6,7 @@ authController.login = function (req, res) {
 };
 
 authController.doLogin = function(req, res){
-    passport.authenticate('local')(req, res, function() {
+    passport.authenticate('local', { failureRedirect: '/login' })(req, res, function() {
         res.redirect('/');
     });
 } 
@@ -16,7 +16,7 @@ authController.isAuthenticated = function () {
       if(req.isAuthenticated()){
           return next();
       }
-      res.redirect('/');
+      res.redirect('/login');
   }  
 };
 
