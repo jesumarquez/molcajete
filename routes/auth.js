@@ -4,10 +4,16 @@ var express         = require('express'),
     authController  = require('../controllers/authController');
 
 router.get('/', authController.login);
-
-router.post('/', passport.authenticate('local', {
+router.post('/', passport.authenticate('local-login', {
     successRedirect: '/', 
     failureRedirect: '/login',
+    failureFlash: true
+}));
+
+router.get('/signup', authController.signup);
+router.post('/signup', passport.authenticate('local-signup', {
+    successRedirect: '/', 
+    failureRedirect: '/signup',
     failureFlash: true
 }));
 

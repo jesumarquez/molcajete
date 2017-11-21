@@ -1,25 +1,28 @@
-var user = {};
-
+var Client = require('mariasql'),
+    connection = new Client({
+        user: 'molca',
+        password: 'chipotle01',
+        host: 'localhost',
+        db: 'molcajete'
+    }),
+    user = {};
 
 user.findById = function(username, callback){ 
-    var users = [
-        {
-            username: "jesumarquez@gmail.com",
-            password: "123123",
-            fullname: "Jesú Márquez"
-        },
-        {
-            username: "pepe@gmail.com",
-            password: "123123",
-            fullname: "Pepe"
+    connection.query('SELECT id, username, password FROM user WHERE username = :username', { username: username },
+        function (err, rows) {
+            if(err)
+                throw err;
+            if(!rows.length)
+                callback(null);
+            else{
+                callback({ 
+                    id: rows[0].id,
+                    username: username,
+                    password: rows[0].password
+                });
+            }
         }
-    ];
-
-    var user = users.find(function(u){
-        return u.username === username;
-    });
-    
-    callback(user);
+    );
 }
 
 module.exports = user;

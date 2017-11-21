@@ -5,7 +5,7 @@ var express         = require('express'),
     cookieParser    = require('cookie-parser'),
     config          = require('./config'),
     appRoute        = require('./routes'),
-    loginRoute      = require('./routes/auth'),
+    authRoute       = require('./routes/auth'),
     session         = require('express-session'),
     passport        = require('passport'),
     LocalStrategy   = require('passport-local').Strategy,
@@ -36,7 +36,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-passport.use(new LocalStrategy({
+passport.use('local-login',
+    new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password',
         passReqToCallback: true
@@ -55,6 +56,22 @@ passport.use(new LocalStrategy({
         });
     }
 ));
+passport.use('local-signup',
+    new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password',
+        passReqToCallback: true
+    },
+    function (req, username, password, done) {
+        User.findById(username, function(user){
+            if(user) {
+                return done(null, false, req.flash('signupMessage', 'User already exist!'));
+            }
+            
+            return done(null, user);
+        });
+    }
+));
 passport.serializeUser(function (user, done) {
     done(null, user.username);
 });
@@ -66,9 +83,9 @@ passport.deserializeUser(function (username, done) {
 
 //ROUTES
 app.use('/', appRoute);
-app.use('/login', loginRoute);
+app.use('/login', authRoute);
 
 //LISTEN
 app.listen(port, function(){
-    console.log('server is running...');
+    console.log('server is running on http://localhost:' +  port);
 });

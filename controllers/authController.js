@@ -1,8 +1,13 @@
-var passport        = require('passport')
+var passport        = require('passport'),
+    user            = require('../models/user'),
     authController  = {};
 
 authController.login = function (req, res) {
     res.render('auth/login', { message: req.flash('loginMessage') });
+};
+
+authController.signup = function (req, res) {
+    res.render('auth/signup', { message: req.flash('signupMessage') });
 };
 
 authController.isAuthenticated = function () {
@@ -11,7 +16,7 @@ authController.isAuthenticated = function () {
           return next();
       }
       res.redirect('/login');
-  }  
+  };  
 };
 
 module.exports = authController;

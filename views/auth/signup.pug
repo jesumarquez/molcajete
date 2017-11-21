@@ -1,16 +1,16 @@
 extend /layout
 
 block content
-    h1 Login
+    h1 Sign Up
     span.text-danger #{message}
-    form(action="login", method="post")
+    form(action="signup", method="post")
+        .form-group
+            label(for="fullName")
+            input(type="text", name="fullName", placeholder="Full Name").form-control
         .form-group
             label(for="email")
             input(type="text", name="email", placeholder="Email").form-control
         .form-group
             label(for="password")
             input(type="password", name="password", placeholder="Password").form-control            
-        button(type="submit").btn.btn-default Login
-    br
-    br
-    a(href="/login/signup") Register
+        button(type="submit").btn.btn-default Sign Up
