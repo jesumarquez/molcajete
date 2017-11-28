@@ -18,7 +18,7 @@ user.findById = function(username, callback){
             else{
                 callback({ 
                     id: rows[0].id,
-                    username: username,
+                    username: rows[0].username,
                     password: rows[0].password
                 });
             }
@@ -35,7 +35,7 @@ user.create = function(username, password, fullName, callback) {
                 throw err;            
             else {
                 callback({ 
-                    id: result.id,
+                    id: result.info.insertId,
                     username: username,
                     fullName: fullName
                 })
