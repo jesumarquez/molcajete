@@ -1,9 +1,9 @@
 var Client = require('mariasql'),
     connection = new Client({
-        user: 'molca',
-        password: 'chipotle01',
-        host: 'localhost',
-        db: 'molcajete'
+        user: process.env.MOLCAJETE_DB_USER,
+        password: process.env.MOLCAJETE_DB_PASSWORD,
+        host: process.env.MOLCAJETE_DB_SERVER,
+        db: process.env.MOLCAJETE_DB_NAME
     }),
     user = {};
 
