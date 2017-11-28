@@ -8,7 +8,8 @@ var Client = require('mariasql'),
     user = {};
 
 user.findById = function(username, callback){ 
-    connection.query('SELECT id, username, password FROM user WHERE username = :username', { username: username },
+    connection.query('SELECT id, username, password FROM user WHERE username = :username', 
+        { username: username },
         function (err, rows) {
             if(err)
                 throw err;
@@ -20,6 +21,24 @@ user.findById = function(username, callback){
                     username: username,
                     password: rows[0].password
                 });
+            }
+        }
+    );
+};
+
+user.create = function(username, password, fullName, callback) {
+    connection.query('INSERT INTO user(username, password, active, creation_date, last_access, full_name)' +
+    ' VALUES (:username,:password, 1, NOW(), null, :fullName)',
+        { username: username, password: password, fullName: fullName }, 
+        function(err, result) {
+            if(err)
+                throw err;            
+            else {
+                callback({ 
+                    id: result.id,
+                    username: username,
+                    fullName: fullName
+                })
             }
         }
     );

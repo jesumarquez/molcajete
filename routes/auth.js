@@ -13,7 +13,7 @@ router.post('/', passport.authenticate('local-login', {
 router.get('/signup', authController.signup);
 router.post('/signup', passport.authenticate('local-signup', {
     successRedirect: '/', 
-    failureRedirect: '/signup',
+    failureRedirect: '/login/signup',
     failureFlash: true
 }));
 

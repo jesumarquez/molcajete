@@ -67,8 +67,13 @@ passport.use('local-signup',
             if(user) {
                 return done(null, false, req.flash('signupMessage', 'User already exist!'));
             }
-            
-            return done(null, user);
+
+            User.create(username, password, req.body.fullName, function(newUser){
+                if(newUser)
+                    return done(null, newUser);
+                else
+                    return done(null, false, req.flash('signupMessage','Error al crear el usuario.'));                
+            });
         });
     }
 ));
