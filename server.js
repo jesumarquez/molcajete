@@ -11,6 +11,7 @@ var express         = require('express'),
     LocalStrategy   = require('passport-local').Strategy,
     User            = require('./models/user'),
     flash           = require('connect-flash'),
+    bcrypt          = require('bcrypt')
     port            = process.env.PORT || config.app.port;
 
 //VIEWS
@@ -48,7 +49,7 @@ passport.use('local-login',
                 return done(null, false, req.flash('loginMessage', 'User not found'));
             }
 
-            if(user.password !== password){
+            if(!bcrypt.compareSync(password, user.password)){
                 return done(null, false, req.flash('loginMessage','Incorrect password.'));                
             }
 
@@ -68,7 +69,7 @@ passport.use('local-signup',
                 return done(null, false, req.flash('signupMessage', 'User already exist!'));
             }
 
-            User.create(username, password, req.body.fullName, function(newUser){
+            User.create(username, bcrypt.hashSync(password, 7), req.body.fullName, function(newUser){
                 if(newUser)
                     return done(null, newUser);
                 else
