@@ -10,6 +10,11 @@ authController.signup = function (req, res) {
     res.render('auth/signup', { message: req.flash('signupMessage') });
 };
 
+authController.logout = function (req, res) {
+    req.logout();
+    res.redirect('/');
+};
+
 authController.isAuthenticated = function () {
   return function (req, res, next) {
       if(req.isAuthenticated()){
