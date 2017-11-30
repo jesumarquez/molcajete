@@ -1,47 +1,86 @@
-var Client = require('mariasql'),
-    connection = new Client({
-        user: process.env.MOLCAJETE_DB_USER,
-        password: process.env.MOLCAJETE_DB_PASSWORD,
-        host: process.env.MOLCAJETE_DB_SERVER,
-        db: process.env.MOLCAJETE_DB_NAME
+var config = require('../config'),
+    Sequelize = require('sequelize'),
+    sequelize = new Sequelize(config.db.dbname, config.db.user, config.db.password, {
+        host: config.db.host,
+        dialect: 'postgres',
+        operatorsAliases: false,
+        define: {
+            freezeTableName: true,
+            timestamps: false
+        }
+    }),
+    User = sequelize.define('user', {
+        id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        username: {
+            type: Sequelize.STRING
+        },
+        password: {
+            type: Sequelize.STRING
+        },
+        active: {
+            type: Sequelize.BOOLEAN
+        },
+        creationDate: {
+            type: Sequelize.DATE,
+            field: 'creation_date'
+        },
+        lastAccess: {
+            type: Sequelize.DATE,
+            field: 'last_access'
+        },
+        fullName: {
+            type: Sequelize.STRING,
+            field: 'full_name'            
+        }
     }),
     user = {};
 
+sequelize.authenticate()
+    .then(function() {
+        console.log('Connection has been established successfully.')
+    })
+    .catch(function() {
+        console.error('Unable to connect to the database:', err);
+    });
+
 user.findById = function(username, callback){ 
-    connection.query('SELECT id, username, password FROM user WHERE username = :username', 
-        { username: username },
-        function (err, rows) {
-            if(err)
-                throw err;
-            if(!rows.length)
-                callback(null);
-            else{
-                callback({ 
-                    id: rows[0].id,
-                    username: rows[0].username,
-                    password: rows[0].password
-                });
-            }
+    User.findOne({
+        where: {
+            username: username
         }
-    );
+    })
+    .then(function(result) {
+        if(!result)
+            callback(null);
+        else{
+            callback(result);
+        }
+    })
+    .catch(function(err){
+        console.error(err.mesage);
+        callback(null);
+    });
 };
 
 user.create = function(username, password, fullName, callback) {
-    connection.query('INSERT INTO user(username, password, active, creation_date, last_access, full_name)' +
-    ' VALUES (:username,:password, 1, NOW(), null, :fullName)',
-        { username: username, password: password, fullName: fullName }, 
-        function(err, result) {
-            if(err)
-                throw err;            
-            else {
-                callback({ 
-                    id: result.info.insertId,
-                    username: username,
-                    fullName: fullName
-                })
-            }
-        }
-    );
+    User.create({
+        username: username,
+        password: password,
+        fullName: fullName,
+        creationDate: new Date(),
+        active: 1
+    })
+    .then(function(result) {
+        callback(result);
+    })
+    .catch(function(err){
+        console.error(err.message);
+        callback(null);    
+    });
 }
 
 module.exports = user;

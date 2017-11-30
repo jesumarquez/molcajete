@@ -69,11 +69,12 @@ passport.use('local-signup',
                 return done(null, false, req.flash('signupMessage', 'User already exist!'));
             }
 
-            User.create(username, bcrypt.hashSync(password, 7), req.body.fullName, function(newUser){
-                if(newUser)
-                    return done(null, newUser);
-                else
-                    return done(null, false, req.flash('signupMessage','Error al crear el usuario.'));                
+            User.create(username, bcrypt.hashSync(password, 7), req.body.fullName, 
+                function(newUser){
+                    if(newUser)
+                        return done(null, newUser);
+                    else
+                        return done(null, false, req.flash('signupMessage','Error al crear el usuario.'));                
             });
         });
     }
