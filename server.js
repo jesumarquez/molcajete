@@ -21,7 +21,7 @@ app.locals.basedir = app.get('views');
 
 //STATIC
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/static', express.static(path.join(__dirname, 'node_modules')));
+app.use('/static', express.static(path.join(__dirname, 'public')));
 
 //BODY PARSER
 app.use(bodyParser.json());

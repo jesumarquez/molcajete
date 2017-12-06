@@ -1,0 +1,20 @@
+{
+  "name": "molcajete",
+  "description": "",
+  "main": "server.js",
+  "authors": [
+    "Jesú Márquez <jesumarquez@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/jesumarquez/molcajete",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}
